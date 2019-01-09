@@ -39,9 +39,27 @@ public class Signleton {
 	public static class Eager {
 		// Early or Eager initialization leads to creation of global object 
 		// which always use memory even if not required
-		static Eager instance = new Eager();
+		private static final Eager instance = new Eager();
 		private Eager(){}
 		public static Eager getInstance()
+		{
+			return instance;
+		}
+	}
+	
+	public static class EagerWithStaticBlock {
+		// Same as Eager with added advantage of giving option to handle exception
+		private static EagerWithStaticBlock instance;
+		private EagerWithStaticBlock(){}
+		static {
+			try {
+				instance = new Eager();
+			}
+			catch(Exception e) {
+				throw new RuntimeException("Exception");
+			}
+		}
+		public static EagerWithStaticBlock getInstance()
 		{
 			return instance;
 		}
@@ -49,7 +67,7 @@ public class Signleton {
 
 	public static class Lazy {
 		// Better than Early/Eager Initialization but not thread safe
-		static Lazy instance ;
+		private static Lazy instance ;
 		private Lazy(){}
 		public static Lazy getInstance()
 		{
@@ -63,7 +81,7 @@ public class Signleton {
 
 	public static class ThreadSafe {
 		// applying synchronize over method reduces performance tremendously
-		static ThreadSafe instance ;
+		private static ThreadSafe instance ;
 		private ThreadSafe(){}
 		public static synchronized ThreadSafe getInstance()
 		{
@@ -77,7 +95,7 @@ public class Signleton {
 
 	public static class DoubleCheckLock {
 		// it also reduce performance but better than using Synchronize directly over method
-		static DoubleCheckLock instance ;
+		private static DoubleCheckLock instance ;
 		private DoubleCheckLock(){}
 		public static DoubleCheckLock getInstance()
 		{
