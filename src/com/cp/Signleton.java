@@ -94,6 +94,33 @@ public class Signleton {
 		}
 	}
 	
+	public static class DoubleCheckLockWithVolatile {
+		// it resolves the problem of half baked instance
+		/*
+			To understand the half backed instance situation ( consider above class "DoubleCheckLock" )
+			Say Thread1 reached Line-89 and started the process of object creation, but
+			yet object creation is not completed. Now if in the meantime Thread2 check Line-84 and
+			got that instance != null, so it got the half baked instance and Thread2 returned.
+			To avoid such situation, we need to make instance as volatile, because volatile instance guarantees
+			the completion of all the steps of object creation before another thread reads the reerence.
+		*/
+		private static volatile DoubleCheckLockWithVolatile instance ;
+		private DoubleCheckLockWithVolatile(){}
+		public static DoubleCheckLockWithVolatile getInstance()
+		{
+			if(instance == null)
+			{
+				synchronized (DoubleCheckLockWithVolatile.class) {
+					if(instance == null)
+					{
+						instance = new DoubleCheckLockWithVolatile();
+					}
+				}
+			}
+			return instance;
+		}
+	}
+	
 	enum BestSingleton {
 		INSTANCE;
 		int i;
