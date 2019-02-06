@@ -53,7 +53,7 @@ public class Signleton {
 		private EagerWithStaticBlock(){}
 		static {
 			try {
-				instance = new Eager();
+				instance = new EagerWithStaticBlock();
 			}
 			catch(Exception e) {
 				throw new RuntimeException("Exception");
